@@ -22,3 +22,9 @@ jobs:
           test -s styles.css
           test -s app.js
           test -s config.js
+          test -s supabase/migrations/202610220012_phase6_department_service_management.sql
+          grep -q 'function renderKiosk' app.js
+          grep -q 'create_queue_ticket' app.js
+          grep -q 'function renderReports' app.js
+          grep -q 'function exportQueueCsv' app.js
+          ! grep -qi 'service_role' config.js
