@@ -4,7 +4,7 @@ Multi-facility patient-flow and ticketing platform designed to complement existi
 
 ## Current status
 
-The development database and first browser application have been committed. Patient-bearing SELECT policies are limited to explicit operational/clinical roles by the Phase 4 security-hardening migration. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, appointment/walk-in creation, check-in/cancellation and queue ticket creation/call/start/complete/cancel/no-show controls.
+The development database and first browser application have been committed. Patient-bearing SELECT policies are limited to explicit operational/clinical roles by the Phase 4 security-hardening migration. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, service-schedule management, appointment/walk-in creation, check-in/cancellation and queue ticket creation/call/start/complete/cancel/no-show controls. Scheduled appointments require a schedule, and a database trigger validates slot alignment and uses transaction advisory locks to enforce per-slot capacity.
 
 - Supabase project ref: `mcjmjvulkilfpglktqqx` (region `ap-south-1`)
 - PostgreSQL 17
@@ -12,6 +12,7 @@ The development database and first browser application have been committed. Pati
 - Phase 2: patients, service schedules, appointments
 - Phase 3: queue tickets and private atomic daily counters
 - Phase 4: least-privilege read policies for patient, appointment and queue-ticket data
+- Phase 5: service schedules and database-enforced appointment slot capacity
 - Phase 4 UI shell: `index.html`, `styles.css`, `app.js`, `config.js`
 - `config.js` contains a browser-safe publishable key. No service-role key is used in the browser.
 - RLS and composite facility-scoped foreign keys are enabled. Queue writes must go through authenticated RPCs.
@@ -22,9 +23,9 @@ The development database and first browser application have been committed. Pati
 
 ## Known limitations
 
-- Appointment slot capacity/overbooking is not enforced atomically yet.
+- Automated concurrent booking tests and browser end-to-end tests have not yet been run.
 - Duplicate patient detection/review, public online booking, patient self-service, public queue boards, print tickets, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented.
-- Schedule entries can be configured in the database, but the browser UI does not yet manage schedule creation.
+- The browser UI creates service schedules, but editing/deactivation is not yet available.
 - Facility membership administration and facility onboarding remain owner/bootstrap workflows.
 - The app should not be used with real patient information until the remaining security, privacy, clinical governance, recovery and operational tests are completed.
 
