@@ -25,7 +25,7 @@ The development database and first browser application have been committed. Pati
 ## Known limitations
 
 - Automated concurrent booking tests and browser end-to-end tests have not yet been run.
-- Duplicate patient detection/review, public online booking and independent patient self-service, public queue boards, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented. Reports currently cover today's tickets and appointments only. The current patient check-in is staff-assisted and ticket printing is available from the issued-ticket receipt.
+- Duplicate patient detection/review, public online booking and independent patient self-service, public queue boards, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented. Reports currently cover today's tickets and appointments only. The staff-assisted check-in remains available, and a verified-phone public patient portal now supports walk-in ticket creation and ticket-status checks. Ticket printing is available from both workflows.
 - Service schedules can be activated/deactivated, but editing a schedule and schedule-based slot availability selection are not yet available.
 - Facility membership administration and facility onboarding remain owner/bootstrap workflows.
 - The app should not be used with real patient information until the remaining security, privacy, clinical governance, recovery and operational tests are completed.
