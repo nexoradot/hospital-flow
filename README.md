@@ -4,7 +4,7 @@ Multi-facility patient-flow and ticketing platform designed to complement existi
 
 ## Current status
 
-The development database and first browser application have been committed. Patient-bearing SELECT policies are limited to explicit operational/clinical roles by the Phase 4 security-hardening migration. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, manager-only department/service management, schedule activation/deactivation, appointment/walk-in creation, a staff-assisted department/service patient check-in flow, printable queue receipts, check-in/cancellation and queue ticket call/start/complete/cancel/no-show controls. Scheduled appointments require a schedule, and a database trigger validates slot alignment and uses transaction advisory locks to enforce per-slot capacity.
+The development database and first browser application have been committed. Patient-bearing SELECT policies are limited to explicit operational/clinical roles by the Phase 4 security-hardening migration. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, manager-only department/service management, schedule activation/deactivation, appointment/walk-in creation, a staff-assisted department/service patient check-in flow, printable queue receipts, operational reports with a privacy-conscious queue CSV export, check-in/cancellation and queue ticket call/start/complete/cancel/no-show controls. Scheduled appointments require a schedule, and a database trigger validates slot alignment and uses transaction advisory locks to enforce per-slot capacity.
 
 - Supabase project ref: `mcjmjvulkilfpglktqqx` (region `ap-south-1`)
 - PostgreSQL 17
@@ -25,7 +25,7 @@ The development database and first browser application have been committed. Pati
 ## Known limitations
 
 - Automated concurrent booking tests and browser end-to-end tests have not yet been run.
-- Duplicate patient detection/review, public online booking and independent patient self-service, public queue boards, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented. The current patient check-in is staff-assisted and ticket printing is available from the issued-ticket receipt.
+- Duplicate patient detection/review, public online booking and independent patient self-service, public queue boards, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented. Reports currently cover today's tickets and appointments only. The current patient check-in is staff-assisted and ticket printing is available from the issued-ticket receipt.
 - Service schedules can be activated/deactivated, but editing a schedule and schedule-based slot availability selection are not yet available.
 - Facility membership administration and facility onboarding remain owner/bootstrap workflows.
 - The app should not be used with real patient information until the remaining security, privacy, clinical governance, recovery and operational tests are completed.
