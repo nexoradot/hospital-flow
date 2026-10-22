@@ -29,6 +29,12 @@ jobs:
           test -s supabase/migrations/202610220013_phase7_verified_patient_portal.sql
           test -s supabase/migrations/202610220014_phase7_private_portal_grants_hardening.sql
           test -s supabase/migrations/202610220015_phase7_public_catalog_invoker_hardening.sql
+          test -s supabase/migrations/202610220016_phase8_facility_team_access_management.sql
+          test -s supabase/migrations/202610220017_phase9_audit_feed_and_membership_locking.sql
+          test -s supabase/migrations/202610220018_phase10_private_admin_function_wrappers.sql
+          grep -q 'function renderTeam' app.js
+          grep -q 'assign_facility_member' app.js
+          grep -q 'list_facility_audit_events' app.js
           grep -q 'get_patient_portal_directory' patient.js
           grep -q 'create_patient_portal_ticket' patient.js
           test -s supabase/migrations/202610220012_phase6_department_service_management.sql
