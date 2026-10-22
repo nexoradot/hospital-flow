@@ -18,6 +18,10 @@ The development database and first browser application have been committed. Pati
 - Phase 8: facility-scoped team access dashboard, role assignment for existing accounts, membership suspend/reactivate/revoke controls, and audit events
 - Phase 9: administrator/manager-only audit activity feed and serialized membership status changes to protect the last active facility administrator
 - Patient records now support controlled edits with a duplicate-MRN block and a possible-duplicate warning based on name, date of birth, and/or phone
+- Phase 10: privileged membership and audit implementations moved into the private schema behind SECURITY INVOKER public RPC wrappers
+- Phase 11: explicit deny policies for private patient-portal profile and rate-limit tables
+- CI now checks the Phase 8–11 migration files and new team/audit functionality; JavaScript syntax has been checked for both browser scripts
+- Remaining production gate: enable leaked-password protection in Supabase Auth, configure/test SMS delivery and deployed auth URLs, then complete browser end-to-end, concurrency, backup/restore, privacy and clinical-governance testing
 - Operational navigation and create/edit controls are filtered by facility role; database policies and RPC checks remain the enforcement boundary
 
 - Phase 4 UI shell: `index.html`, `styles.css`, `app.js`, `config.js`
