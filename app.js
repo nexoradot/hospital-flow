@@ -32,7 +32,7 @@ async function init(){
  $('#facility-switch').onchange=async e=>{facilityId=e.target.value;applyRoleNavigation();await work(null,loadData)};
  $('#menu-toggle').onclick=()=>$('#sidebar').classList.toggle('open');
  $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));
- document.addEventListener('click',clickContent,true);document.addEventListener('submit',submitContent,true);
+ document.addEventListener('click',clickContent,true);
  $('#content-area').addEventListener('input',e=>{if(e.target.id==='patient-search'){const pos=e.target.selectionStart;state.patientSearch=e.target.value;renderPatients();const next=$('#patient-search');if(next){next.focus();next.setSelectionRange(pos,pos)}}});
  db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;memberships=[];facilities=[];facilityId=null;patients=[];appointments=[];tickets=[];teamMembers=[];auditEvents=[];auth('login')}else if(session?.user){user=session.user}});
  const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;if(session?.user){user=session.user;await loadWorkspace()}else auth('login');
