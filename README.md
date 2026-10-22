@@ -24,8 +24,8 @@ The development database and first browser application have been committed. Pati
 ## Known limitations
 
 - Automated concurrent booking tests and browser end-to-end tests have not yet been run.
-- Duplicate patient detection/review, public online booking, patient self-service, public queue boards, print tickets, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented.
-- The browser UI creates service schedules, but editing/deactivation is not yet available.
+- Duplicate patient detection/review, public online booking and independent patient self-service, public queue boards, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented. The current patient check-in is staff-assisted and ticket printing is available from the issued-ticket receipt.
+- The browser UI creates service schedules, but schedule editing/deactivation and schedule-based slot selection are not yet available.
 - Facility membership administration and facility onboarding remain owner/bootstrap workflows.
 - The app should not be used with real patient information until the remaining security, privacy, clinical governance, recovery and operational tests are completed.
 
@@ -56,6 +56,6 @@ The development database and first browser application have been committed. Pati
 1. Tenant foundation — hosted security checks completed; full automated isolation tests remain.
 2. Patient registration and appointments — schema and initial UI committed; end-to-end verification remains.
 3. Queue engine — atomic daily numbering and guarded transitions implemented; concurrency and authenticated workflow tests remain.
-4. Appointment capacity, duplicate review, public booking and ticket printing.
+4. Department/service management and staff-assisted patient check-in/ticket printing are implemented; schedule editing, duplicate review, verified public booking and capacity concurrency tests remain.
 5. Referrals, notifications and secure patient queue status.
 6. HMS integration, reporting, accessibility, load/restore testing and controlled pilot.
