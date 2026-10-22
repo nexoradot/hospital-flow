@@ -14,6 +14,12 @@ The development database and first browser application have been committed. Pati
 - Phase 4: least-privilege read policies for patient, appointment and queue-ticket data
 - Phase 5: service schedules and database-enforced appointment slot capacity
 - Phase 6: facility-scoped department/service administration and manager-only RLS policies
+- Phase 7: verified-phone patient self-service walk-in ticket portal (SMS provider configuration and end-to-end testing still required)
+- Phase 8: facility-scoped team access dashboard, role assignment for existing accounts, membership suspend/reactivate/revoke controls, and audit events
+- Phase 9: administrator/manager-only audit activity feed and serialized membership status changes to protect the last active facility administrator
+- Patient records now support controlled edits with a duplicate-MRN block and a possible-duplicate warning based on name, date of birth, and/or phone
+- Operational navigation and create/edit controls are filtered by facility role; database policies and RPC checks remain the enforcement boundary
+
 - Phase 4 UI shell: `index.html`, `styles.css`, `app.js`, `config.js`
 - `config.js` contains a browser-safe publishable key. No service-role key is used in the browser.
 - RLS and composite facility-scoped foreign keys are enabled. Queue writes must go through authenticated RPCs.
