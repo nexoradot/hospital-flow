@@ -23,6 +23,6 @@
 ## Remaining before production
 1. End-to-end test registration → department/service selection → ticket creation → print → call/start/complete.
 2. Add public patient booking only after phone/email verification, anti-abuse/rate limiting, and a minimal-data design are deployed server-side.
-3. Add schedule editing/deactivation, slot availability selection, and automated capacity/concurrency tests.
+3. Complete automated capacity/concurrency tests and validate schedule edits with realistic future bookings.
 4. Add duplicate-patient review, role/member administration, audit/reporting dashboards, notifications, referrals, and HMS adapters.
 5. Complete privacy impact assessment, clinical governance review, backups/restore drill, monitoring, incident response, and a controlled pilot.
