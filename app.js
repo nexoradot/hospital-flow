@@ -25,22 +25,24 @@ async function init(){
  if(!window.supabase?.createClient||!cfg.supabaseUrl||!cfg.supabasePublishableKey){notify('App configuration missing.',true);return}
  db=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  $('#show-signup').onclick=()=>auth('signup');$('#show-login').onclick=()=>auth('login');
- $('#login-form').onsubmit=e=>{e.preventDefault();work($('#login-submit'),async()=>{const f=new FormData(e.currentTarget),r=await db.auth.signInWithPassword({email:f.get('email'),password:f.get('password')});if(r.error)throw r.error;user=r.data.user;await loadWorkspace()})};
- $('#signup-form').onsubmit=e=>{e.preventDefault();work(e.submitter,async()=>{const f=new FormData(e.currentTarget),r=await db.auth.signUp({email:f.get('email'),password:f.get('password'),options:{data:{full_name:f.get('full_name')}}});if(r.error)throw r.error;if(r.data.session){user=r.data.user;await loadWorkspace()}else{notify('Account created. Check email if confirmation is enabled, then sign in.');auth('login')}})};
- $('#signout-button').onclick=()=>work($('#signout-button'),async()=>{await db.auth.signOut();user=null;auth()});
+ $('#login-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;work($('#login-submit'),async()=>{const f=new FormData(form),email=String(f.get('email')||'').trim().toLowerCase(),password=String(f.get('password')||'');const r=await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;user=r.data.user;await loadWorkspace()})};
+ $('#signup-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;work(e.submitter,async()=>{const f=new FormData(form),email=String(f.get('email')||'').trim().toLowerCase(),password=String(f.get('password')||''),fullName=String(f.get('full_name')||'').trim(),r=await db.auth.signUp({email,password,options:{data:{full_name:fullName}}});if(r.error)throw r.error;if(r.data.session){user=r.data.user;await loadWorkspace()}else{notify('Account created. Check your email if confirmation is enabled, then sign in.');form.reset();auth('login')}})};
+ $('#signout-button').onclick=()=>work($('#signout-button'),async()=>{const {error}=await db.auth.signOut();if(error)throw error;user=null;memberships=[];facilities=[];facilityId=null;patients=[];appointments=[];tickets=[];teamMembers=[];auditEvents=[];auth('login')});
  $('#refresh-button').onclick=()=>work($('#refresh-button'),loadData);
  $('#facility-switch').onchange=async e=>{facilityId=e.target.value;applyRoleNavigation();await work(null,loadData)};
  $('#menu-toggle').onclick=()=>$('#sidebar').classList.toggle('open');
  $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));
  $('#content-area').addEventListener('click',clickContent);$('#content-area').addEventListener('submit',submitContent);
  $('#content-area').addEventListener('input',e=>{if(e.target.id==='patient-search'){const pos=e.target.selectionStart;state.patientSearch=e.target.value;renderPatients();const next=$('#patient-search');if(next){next.focus();next.setSelectionRange(pos,pos)}}});
- db.auth.onAuthStateChange((_event,session)=>{if(session?.user&&!user){user=session.user;setTimeout(()=>loadWorkspace(),0)}else if(!session?.user&&user){user=null;auth()}});
- const {data:{session}}=await db.auth.getSession();if(session?.user){user=session.user;await loadWorkspace()}else auth();
+ db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;memberships=[];facilities=[];facilityId=null;patients=[];appointments=[];tickets=[];teamMembers=[];auditEvents=[];auth('login')}else if(session?.user){user=session.user}});
+ const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;if(session?.user){user=session.user;await loadWorkspace()}else auth('login');
 }
 async function loadWorkspace(){
- app();$('#content-area').innerHTML='<div class="loading-panel">Loading secure facility access…</div>';
+ $('#auth-title').textContent='Checking your facility access…';$('#auth-description').textContent='Signing in securely. Your entered credentials will stay in the form if access cannot be loaded.';
  const r=await db.from('facility_memberships').select('facility_id,role,status,facilities(id,code,name,timezone,status)').eq('user_id',user.id).eq('status','active');
- if(r.error)throw r.error;memberships=(r.data||[]).filter(m=>m.facilities?.status==='active');facilities=memberships.map(m=>m.facilities).filter((f,i,a)=>a.findIndex(x=>x.id===f.id)===i);
+ if(r.error){$('#auth-title').textContent='Workspace could not load';$('#auth-description').textContent='Your sign-in may have succeeded, but facility access could not be checked. Your email and password remain available; retry or refresh after checking your connection.';throw r.error}
+ memberships=(r.data||[]).filter(m=>m.facilities?.status==='active');facilities=memberships.map(m=>m.facilities).filter((f,i,a)=>a.findIndex(x=>x.id===f.id)===i);
+ app();
  if(!facilities.length){$('#facility-switch').innerHTML='<option>No active facility</option>';$('#content-area').innerHTML='<div class="empty-workspace"><p class="eyebrow">FACILITY ACCESS REQUIRED</p><h2>Your account is signed in, but no facility is assigned.</h2><p class="muted">For privacy, new accounts do not automatically receive hospital access. Ask a facility administrator to create your membership. To create the first administrator, use the owner-only bootstrap SQL in the GitHub repository.</p><button class="btn outline" id="signout-empty">Sign out</button></div>';$('#signout-empty').onclick=()=>db.auth.signOut();return}
  facilityId=facilities[0].id;$('#facility-switch').innerHTML=facilities.map(f=>'<option value="'+esc(f.id)+'">'+esc(f.name)+'</option>').join('');$('#facility-switch').value=facilityId;applyRoleNavigation();await loadData();navigate('overview')
 }
