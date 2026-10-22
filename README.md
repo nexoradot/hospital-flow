@@ -57,6 +57,6 @@ The development database and first browser application have been committed. Pati
 1. Tenant foundation — hosted security checks completed; full automated isolation tests remain.
 2. Patient registration and appointments — schema and initial UI committed; end-to-end verification remains.
 3. Queue engine — atomic daily numbering and guarded transitions implemented; concurrency and authenticated workflow tests remain.
-4. Department/service management and staff-assisted patient check-in/ticket printing are implemented; schedule editing, duplicate review, verified public booking and capacity concurrency tests remain.
+4. Department/service management and staff-assisted patient check-in/ticket printing are implemented; schedule editing, duplicate review, verified public booking and capacity concurrency tests remain. The slot picker is client-side assistance only; the database trigger enforces actual capacity.
 5. Referrals, notifications and secure patient queue status.
 6. HMS integration, reporting, accessibility, load/restore testing and controlled pilot.
