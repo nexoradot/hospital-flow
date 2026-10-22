@@ -33,6 +33,7 @@ jobs:
           test -s supabase/migrations/202610220017_phase9_audit_feed_and_membership_locking.sql
           test -s supabase/migrations/202610220018_phase10_private_admin_function_wrappers.sql
           test -s supabase/migrations/202610220019_phase11_explicit_private_portal_deny_policies.sql
+          test -s supabase/migrations/202610220020_phase12_last_admin_role_protection.sql
           grep -q 'function renderTeam' app.js
           grep -q 'assign_facility_member' app.js
           grep -q 'list_facility_audit_events' app.js
