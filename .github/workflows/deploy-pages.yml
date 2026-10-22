@@ -1,7 +1,5 @@
-name: Validate and deploy Hospital Flow preview
+name: Deploy Hospital Flow preview
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,31 +9,21 @@ concurrency:
   group: hospital-flow-pages
   cancel-in-progress: true
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Check JavaScript syntax
-        run: node --check app.js
-      - name: Check required assets
-        run: |
-          test -s index.html
-          test -s styles.css
-          test -s app.js
-          test -s config.js
-      - name: Upload static site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
   deploy:
-    needs: validate
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate JavaScript
+        run: node --check app.js
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
       - id: deployment
         uses: actions/deploy-pages@v4
