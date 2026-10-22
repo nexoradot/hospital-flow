@@ -4,19 +4,21 @@ Multi-facility patient-flow and ticketing platform designed to complement existi
 
 ## Current status
 
-The development database and first browser application have been committed. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, appointment/walk-in creation, check-in/cancellation and queue ticket creation/call/start/complete/cancel/no-show controls.
+The development database and first browser application have been committed. Patient-bearing SELECT policies are limited to explicit operational/clinical roles by the Phase 4 security-hardening migration. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, appointment/walk-in creation, check-in/cancellation and queue ticket creation/call/start/complete/cancel/no-show controls.
 
 - Supabase project ref: `mcjmjvulkilfpglktqqx` (region `ap-south-1`)
 - PostgreSQL 17
 - Phase 1: facilities, facility memberships, departments, services, audit events
 - Phase 2: patients, service schedules, appointments
 - Phase 3: queue tickets and private atomic daily counters
+- Phase 4: least-privilege read policies for patient, appointment and queue-ticket data
 - Phase 4 UI shell: `index.html`, `styles.css`, `app.js`, `config.js`
 - `config.js` contains a browser-safe publishable key. No service-role key is used in the browser.
 - RLS and composite facility-scoped foreign keys are enabled. Queue writes must go through authenticated RPCs.
 - GitHub Pages deployment workflow: `.github/workflows/deploy-pages.yml`. The repository owner may need to enable **Settings → Pages → Build and deployment → Source: GitHub Actions** before the first deployment.
 - Initial facility setup guide: `docs/FIRST-FACILITY-BOOTSTRAP.sql`. Run only in Supabase SQL Editor using an authorized owner account after the first admin signs up.
-- This is still a development preview. Browser flows have not yet been end-to-end tested, and a successful Pages deployment has not yet been confirmed.
+- The app's JavaScript syntax and required assets passed GitHub Actions validation. GitHub Pages deployment currently fails because Pages has not been enabled for the repository; enable it under Settings → Pages → Build and deployment → Source: GitHub Actions, then rerun the workflow.
+- This is still a development preview. Browser flows have not yet been end-to-end tested.
 
 ## Known limitations
 
