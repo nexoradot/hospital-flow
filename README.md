@@ -4,20 +4,24 @@ Multi-facility patient-flow and ticketing platform. Hospital Flow is designed to
 
 ## Current status
 
-Phase 1 establishes the initial tenant-isolated database foundation in the dedicated Supabase project. This is an early development foundation, not a production-ready hospital application.
+Phases 1 and 2 have established the tenant-isolated database foundation and the initial patient-registration, service-schedule and appointment schema in the dedicated Supabase project. This remains an early development foundation, not a production-ready hospital application.
 
 - Supabase project ref: `mcjmjvulkilfpglktqqx`
 - Supabase region: `ap-south-1` (Mumbai)
 - PostgreSQL: 17
-- Initial tables: facilities, facility memberships, departments, services, audit events
-- Row-level security enabled on all five public tables
-- Patient, appointment, encounter, queue-ticket, and referral tables are not implemented yet
-- No real patient data is included
+- Phase 1 tables: facilities, facility memberships, departments, services, audit events
+- Phase 2 tables: patients, service schedules, appointments
+- RLS is enabled on all eight operational/configuration tables plus audit_events.
+- Patient, schedule and appointment tables have facility-scoped RLS and same-facility foreign keys.
+- Patient and appointment create/update changes write minimal audit events without storing patient details in audit metadata.
+- Anonymous SELECT is not granted on patient, schedule or appointment tables; audit_events remains unavailable to browser clients.
+- Queue tickets, atomic slot-capacity enforcement, public online booking, encounter/clinical notes, referrals and notifications are not implemented yet.
+- No real patient data is included.
 
 ## Repository layout
 
 - `supabase/migrations/` — database schema migrations applied to the dedicated development project
-- `supabase/tests/` — starter pgTAP tenant-isolation tests; not yet run locally
+- `supabase/tests/` — starter pgTAP tenant-isolation tests; full local suite has not been run
 - `docs/` — security review and verification notes
 - `.env.example` — safe configuration template; never put real secrets here
 
@@ -27,6 +31,8 @@ Phase 1 establishes the initial tenant-isolated database foundation in the dedic
 - Never commit Supabase service-role keys, access tokens, credentials, or patient data.
 - Browser clients must use only a publishable/anon key and rely on RLS; privileged operations belong in trusted server-side code.
 - Cross-facility patient identity matching must not grant cross-facility clinical-record access.
+- Public online booking must be implemented through a rate-limited, abuse-resistant server-side workflow; do not expose patient tables to anonymous clients.
+- Appointment slot capacity must be enforced atomically before real booking traffic is enabled.
 - Emergency escalation must not be replaced by routine queue ticketing.
 
 ## Local setup
@@ -46,11 +52,11 @@ supabase test db
 
 ## Roadmap
 
-1. Tenant foundation and security review — initial foundation applied; further automated tests remain.
-2. Patient registration, duplicate checks, service schedules, appointments, walk-in registration and check-in.
-3. Atomic queue ticket allocation, queue state transitions, call-forward and display board.
-4. Referrals, notifications and secure patient queue-status access.
-5. HMS integration adapters and integration event tracking.
-6. Operational dashboards, accessibility, load testing, backup/recovery drills and pilot governance.
+1. Tenant foundation and security review — hosted checks completed; full automated isolation tests remain.
+2. Patient registration, service schedules, appointments and walk-in data model — schema applied; UI and end-to-end workflows remain.
+3. Secure duplicate review, appointment availability/capacity enforcement, booking, cancellation and check-in workflows.
+4. Atomic queue ticket allocation, queue state transitions, call-forward and display board.
+5. Referrals, notifications and secure patient queue-status access.
+6. HMS integration adapters, operational dashboards, accessibility, load testing, backup/recovery drills and pilot governance.
 
 Do not use real patient data in development fixtures. Complete privacy, security, clinical governance, operational resilience and regulatory reviews before live hospital deployment.
