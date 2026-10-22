@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c2538">
+  <meta name="description" content="Choose a hospital department and get a verified mobile queue ticket with Hospital Flow.">
+  <title>Patient Self-Service | Hospital Flow</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script defer src="./patient.js"></script>
+</head>
+<body class="patient-public">
+  <header class="patient-header">
+    <a class="sidebar-brand" href="./index.html"><div class="brand-mark">HF</div><div><strong>Hospital Flow</strong><small>Patient self-service</small></div></a>
+    <a class="btn outline" href="./index.html">Staff sign in</a>
+  </header>
+  <main class="patient-main">
+    <section class="patient-hero">
+      <p class="eyebrow">PATIENT SELF-SERVICE</p>
+      <h1>Choose your clinic.<br>Know your queue number.</h1>
+      <p>Select a facility, department and walk-in service. Verify your mobile number to receive a queue ticket and check its status.</p>
+      <div class="patient-safety"><strong>Need emergency care?</strong> Do not wait for a ticket. Go directly to the facility emergency/triage team.</div>
+    </section>
+    <div id="patient-message" class="patient-message" role="status" aria-live="polite">Loading available facilities…</div>
+    <div class="patient-grid">
+      <section class="patient-card">
+        <div class="patient-card-head"><span>01</span><div><h2>Choose where to go</h2><p>Only active walk-in services are listed.</p></div></div>
+        <form id="patient-ticket-form" class="stack">
+          <label>Facility *
+            <select id="patient-facility" required><option value="">Loading facilities…</option></select>
+          </label>
+          <label>Department *
+            <select id="patient-department" required disabled><option value="">Select facility first</option></select>
+          </label>
+          <label>Clinic / service *
+            <select id="patient-service" name="service_id" required disabled><option value="">Select department first</option></select>
+          </label>
+          <div class="form-grid">
+            <div class="field"><label>First name *</label><input id="patient-first-name" maxlength="100" required autocomplete="given-name"></div>
+            <div class="field"><label>Last name *</label><input id="patient-last-name" maxlength="100" required autocomplete="family-name"></div>
+          </div>
+          <div class="patient-safety"><strong>Important</strong> Self-service currently creates a new portal-linked patient record. If you already have a medical record number at this facility, please visit reception so staff can confirm your identity and avoid duplicate records.</div>
+          <button class="btn primary full" id="patient-create-ticket" type="submit" disabled>Verify mobile number first</button>
+        </form>
+      </section>
+      <section class="patient-card">
+        <div class="patient-card-head"><span>02</span><div><h2>Verify your mobile</h2><p>We use a one-time SMS code before creating a ticket.</p></div></div>
+        <form id="patient-phone-form" class="stack">
+          <label>Mobile number in international format *
+            <input id="patient-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+2547XXXXXXXX" pattern="\+[1-9][0-9]{7,14}" required>
+          </label>
+          <button class="btn outline full" id="patient-send-otp" type="submit">Send verification code</button>
+        </form>
+        <form id="patient-otp-form" class="stack hidden">
+          <label>SMS verification code *
+            <input id="patient-otp" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="10" required placeholder="Enter the code you received">
+          </label>
+          <button class="btn primary full" id="patient-verify-otp" type="submit">Verify mobile</button>
+          <button class="text-button" id="patient-resend-otp" type="button">Send a new code</button>
+        </form>
+        <div id="patient-verified" class="patient-verified hidden"><span>✓</span><div><strong>Mobile verified</strong><p>You can now request a ticket.</p></div></div>
+        <div class="patient-info-list">
+          <div><span>✓</span><p>Only a verified mobile account can create tickets.</p></div>
+          <div><span>✓</span><p>Your ticket status is visible only to your verified account.</p></div>
+          <div><span>✓</span><p>Up to three self-service tickets per facility per day.</p></div>
+        </div>
+      </section>
+    </div>
+    <section id="patient-ticket-result" class="patient-ticket-result hidden"></section>
+    <footer class="patient-footer">Hospital Flow · Protect your ticket number. Follow staff instructions at all times.</footer>
+  </main>
+</body>
+</html>
