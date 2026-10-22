@@ -15,13 +15,19 @@ jobs:
         with:
           node-version: 22
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: |
+          node --check app.js
+          node --check patient.js
       - name: Check required app files
         run: |
           test -s index.html
           test -s styles.css
           test -s app.js
           test -s config.js
+          test -s patient.html
+          test -s patient.js
+          grep -q 'get_patient_portal_directory' patient.js
+          grep -q 'create_patient_portal_ticket' patient.js
           test -s supabase/migrations/202610220012_phase6_department_service_management.sql
           grep -q 'function renderKiosk' app.js
           grep -q 'create_queue_ticket' app.js
