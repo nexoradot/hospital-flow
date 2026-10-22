@@ -1,64 +1,58 @@
 # Hospital Flow
 
-Multi-facility patient-flow and ticketing platform. Hospital Flow is designed to complement existing Hospital Management Systems (HMS), not replace every clinical or administrative function.
+Multi-facility patient-flow and ticketing platform designed to complement existing Hospital Management Systems (HMS).
 
 ## Current status
 
-Phases 1–3 establish a tenant-isolated database foundation for facility setup, patient registration, service schedules, appointments, walk-ins and the core queue engine. This remains an early development backend, not a production-ready hospital application.
+The development database and first browser application have been committed. The browser app includes email/password authentication, facility selection, overview metrics, patient registration/search, appointment/walk-in creation, check-in/cancellation and queue ticket creation/call/start/complete/cancel/no-show controls.
 
-- Supabase project ref: `mcjmjvulkilfpglktqqx`
-- Supabase region: `ap-south-1`
-- PostgreSQL: 17
-- Phase 1 tables: facilities, facility memberships, departments, services, audit events
-- Phase 2 tables: patients, service schedules, appointments
-- Phase 3 table: queue tickets; private queue counters allocate daily ticket numbers atomically.
-- RLS is enabled on all nine public tables.
-- Composite foreign keys prevent patient, service, appointment, schedule and ticket links across facilities.
-- Patient, appointment and queue-ticket changes write minimal audit events without putting patient details in audit metadata.
-- Queue creation and transition RPCs are available only to authenticated callers and validate facility membership/role.
-- Anonymous users cannot select or directly insert/update queue tickets; authenticated clients cannot directly insert/update tickets either.
-- Public online booking, atomic appointment-slot capacity enforcement, encounter/clinical notes, referrals, patient notifications and the browser UI are not implemented yet.
-- No real patient data is included.
+- Supabase project ref: `mcjmjvulkilfpglktqqx` (region `ap-south-1`)
+- PostgreSQL 17
+- Phase 1: facilities, facility memberships, departments, services, audit events
+- Phase 2: patients, service schedules, appointments
+- Phase 3: queue tickets and private atomic daily counters
+- Phase 4 UI shell: `index.html`, `styles.css`, `app.js`, `config.js`
+- `config.js` contains a browser-safe publishable key. No service-role key is used in the browser.
+- RLS and composite facility-scoped foreign keys are enabled. Queue writes must go through authenticated RPCs.
+- GitHub Pages deployment workflow: `.github/workflows/deploy-pages.yml`. The repository owner may need to enable **Settings → Pages → Build and deployment → Source: GitHub Actions** before the first deployment.
+- Initial facility setup guide: `docs/FIRST-FACILITY-BOOTSTRAP.sql`. Run only in Supabase SQL Editor using an authorized owner account after the first admin signs up.
+- This is still a development preview. Browser flows have not yet been end-to-end tested, and a successful Pages deployment has not yet been confirmed.
+
+## Known limitations
+
+- Appointment slot capacity/overbooking is not enforced atomically yet.
+- Duplicate patient detection/review, public online booking, patient self-service, public queue boards, print tickets, SMS/email notifications, referrals, clinical notes and HMS integration adapters are not implemented.
+- Schedule entries can be configured in the database, but the browser UI does not yet manage schedule creation.
+- Facility membership administration and facility onboarding remain owner/bootstrap workflows.
+- The app should not be used with real patient information until the remaining security, privacy, clinical governance, recovery and operational tests are completed.
 
 ## Repository layout
 
-- `supabase/migrations/` — database schema migrations applied to the dedicated development project
-- `supabase/tests/` — starter pgTAP tenant-isolation tests; full local suite has not been run
-- `docs/` — security review and verification notes
-- `.env.example` — safe configuration template; never put real secrets here
+- `supabase/migrations/` — database migrations
+- `supabase/tests/` — starter database tests; full local suite has not been run
+- `docs/` — security and verification notes
+- `.env.example` — safe environment template for local development
 
 ## Security principles
 
-- Facility-owned data must be isolated by facility and authenticated membership.
-- Never commit Supabase service-role keys, access tokens, credentials, or patient data.
-- Browser clients must use only a publishable/anon key and rely on RLS; privileged operations belong in trusted server-side code.
-- Cross-facility patient identity matching must not grant cross-facility clinical-record access.
-- Public online booking must be implemented through a rate-limited, abuse-resistant server-side workflow; do not expose patient tables to anonymous clients.
-- Appointment slot capacity must be enforced atomically before real booking traffic is enabled.
-- Emergency escalation must not be replaced by routine queue ticketing; queue priority deliberately excludes emergency cases.
+- Facility-owned data is isolated by authenticated membership and row-level security.
+- Never commit service-role keys, access tokens, credentials or patient data.
+- Cross-facility patient identity matching must never grant cross-facility clinical-record access.
+- Public booking must use a rate-limited server-side workflow, not anonymous access to patient tables.
+- Emergency escalation must not be replaced by routine queue ticketing.
 
 ## Local setup
 
 1. Install Node.js LTS and the Supabase CLI.
-2. Copy `.env.example` to `.env.local` and add development values locally. Do not commit `.env.local`.
-3. Start a disposable local Supabase environment and run migrations/tests with the CLI.
-4. Review each migration before applying it to a hosted environment.
-
-Typical local database checks:
-
-```sh
-supabase start
-supabase db reset
-supabase test db
-```
+2. Serve the static app locally or use GitHub Pages after enabling the Pages source.
+3. Use a disposable local Supabase project to run migrations and tests.
+4. Review migrations and complete integration/security testing before a pilot.
 
 ## Roadmap
 
-1. Tenant foundation and security review — hosted checks completed; full automated isolation tests remain.
-2. Patient registration, service schedules, appointments and walk-in schema — applied; UI and end-to-end workflows remain.
-3. Queue ticket engine — schema, atomic daily numbering and controlled transition RPCs applied; authenticated end-to-end tests and queue display UI remain.
-4. Secure duplicate review, appointment availability/capacity enforcement, booking, cancellation and check-in workflows.
-5. Referrals, notifications and secure patient queue-status access.
-6. HMS integration adapters, operational dashboards, accessibility, load testing, backup/recovery drills and pilot governance.
-
-Do not use real patient data in development fixtures. Complete privacy, security, clinical governance, operational resilience and regulatory reviews before live hospital deployment.
+1. Tenant foundation — hosted security checks completed; full automated isolation tests remain.
+2. Patient registration and appointments — schema and initial UI committed; end-to-end verification remains.
+3. Queue engine — atomic daily numbering and guarded transitions implemented; concurrency and authenticated workflow tests remain.
+4. Appointment capacity, duplicate review, public booking and ticket printing.
+5. Referrals, notifications and secure patient queue status.
+6. HMS integration, reporting, accessibility, load/restore testing and controlled pilot.
