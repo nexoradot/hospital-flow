@@ -43,6 +43,8 @@ jobs:
           grep -q 'function renderKiosk' app.js
           grep -q 'create_queue_ticket' app.js
           grep -q 'function renderReports' app.js
+          grep -q 'edit-schedule' app.js
+          grep -q 'function scheduleForm(scheduleId' app.js
           grep -q 'function exportQueueCsv' app.js
           grep -q 'appointment-slot' app.js
           ! grep -qi 'service_role' config.js
