@@ -7,6 +7,7 @@
 - Database RLS policies restrict department/service insert and update to facility administrators and managers for their own facility.
 - The composite facility/department foreign key continues to prevent a service being attached to another facility's department.
 - The patient check-in screen filters to active departments and walk-in-enabled services, creates a ticket through the existing atomic queue RPC, and offers a printable receipt.
+- Operational Reports summarize today's queue by service and status and export a CSV containing ticket/service/status fields without patient names.
 - Ticket issuance still requires an authenticated, authorized facility user. The current check-in screen is staff-assisted; it is not an anonymous public patient portal.
 
 ## Migration
