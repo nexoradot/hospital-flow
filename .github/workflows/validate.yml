@@ -26,6 +26,9 @@ jobs:
           test -s config.js
           test -s patient.html
           test -s patient.js
+          test -s supabase/migrations/202610220013_phase7_verified_patient_portal.sql
+          test -s supabase/migrations/202610220014_phase7_private_portal_grants_hardening.sql
+          test -s supabase/migrations/202610220015_phase7_public_catalog_invoker_hardening.sql
           grep -q 'get_patient_portal_directory' patient.js
           grep -q 'create_patient_portal_ticket' patient.js
           test -s supabase/migrations/202610220012_phase6_department_service_management.sql
