@@ -40,7 +40,7 @@ begin
   v_local_queue_date:=timezone(v_timezone,now())::date;
   insert into private.queue_counters as qc(facility_id,service_id,queue_date,last_number)
   values(p_facility_id,p_service_id,v_local_queue_date,1)
-  on conflict(facility_id,service_id,queue_date) do update set last_number=qc.last_number+1
+  on conflict on constraint queue_counters_pkey do update set last_number=qc.last_number+1
   returning qc.last_number into v_ticket_number;
   v_ticket_code:=upper(v_service_code)||'-'||lpad(v_ticket_number::text,3,'0');
   insert into public.queue_tickets(facility_id,patient_id,service_id,appointment_id,queue_date,ticket_number,ticket_code,priority,status,created_by)
